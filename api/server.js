@@ -9,9 +9,12 @@ const categoryRoute = require("./routes/categories");
 const multer = require("multer");
 const path = require("path");
 const colors = require('colors')
+const cors = require('cors')
 
 dotenv.config();
 app.use(express.json());
+app.use(express.urlencoded())
+app.use(cors())
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
 mongoose
@@ -19,10 +22,11 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
-    useFindAndModify: true,
+  
   })
   .then(console.log(`server is now connected to Mongo DataBase on port: ${process.env.PORT}`.blue.underline))
   .catch((err) => console.log(err));
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -43,6 +47,8 @@ app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", categoryRoute);
 
-app.listen("5000", () => {
+app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port : ${process.env.PORT}`.yellow);
-});
+})
+
+mongoose.set('useFindAndModify', false);
