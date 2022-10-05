@@ -13,7 +13,6 @@ const cors = require('cors')
 
 dotenv.config();
 app.use(express.json());
-app.use(express.urlencoded())
 app.use(cors())
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
@@ -46,6 +45,11 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", categoryRoute);
+
+if(process.env.NODE_ENV === 'production'){
+  app.use(express.static('client/build'))
+
+}
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port : ${process.env.PORT}`.yellow);
